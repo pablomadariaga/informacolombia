@@ -3,6 +3,9 @@ import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import Category from './category.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
+/**
+ * Represents an expense record.
+ */
 export default class Expense extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -19,6 +22,9 @@ export default class Expense extends BaseModel {
   @column()
   declare categoryId: number
 
+  /**
+   * Relationship with the Category model
+   */
   @belongsTo(() => Category)
   declare category: BelongsTo<typeof Category>
 
