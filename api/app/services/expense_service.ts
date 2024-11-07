@@ -46,7 +46,7 @@ export class ExpenseService implements ExpenseServiceContract {
   public async updateExpense(id: number, data: Partial<Expense>): Promise<Expense | null> {
     const category = await this.categoryRepository.findCategoryById(data.categoryId!)
     if (!category) {
-      throw new Error('Invalid category ID')
+      return null
     }
     return await this.expenseRepository.updateExpense(id, data)
   }

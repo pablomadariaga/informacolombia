@@ -4,7 +4,7 @@ import Expense from '#models/expense'
 /**
  * Repository for managing Expense data operations.
  */
-export default class ExpenseRepository implements ExpenseRepositoryContract {
+export class ExpenseRepository implements ExpenseRepositoryContract {
   /**
    * Retrieves all expenses with their associated categories.
    * @returns {Promise<Expense[]>} - List of expenses with categories.

@@ -1,5 +1,7 @@
 import { CategoryRepositoryContract } from '#contracts/caterory_repository_contract'
 import { CategoryServiceContract } from '#contracts/caterory_service_contract'
+import { ExpenseRepositoryContract } from '#contracts/expense_repository_contract'
+import { ExpenseServiceContract } from '#contracts/expense_service_contract'
 import type { ApplicationService } from '@adonisjs/core/types'
 
 /**
@@ -30,6 +32,19 @@ export default class AppProvider {
     // Bind CategoryServiceContract to CategoryService implementation
     this.app.container.bind(CategoryServiceContract, () => {
       return this.app.container.make(CategoryService)
+    })
+
+    const { ExpenseService } = await import('#services/expense_service')
+    const { ExpenseRepository } = await import('#repositories/expense_repository')
+
+    // Bind ExpenseRepositoryContract to ExpenseRepository implementation
+    this.app.container.bind(ExpenseRepositoryContract, () => {
+      return this.app.container.make(ExpenseRepository)
+    })
+
+    // Bind ExpenseServiceContract to ExpenseService implementation
+    this.app.container.bind(ExpenseServiceContract, () => {
+      return this.app.container.make(ExpenseService)
     })
   }
 

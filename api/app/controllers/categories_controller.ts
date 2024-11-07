@@ -1,6 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { CategoryServiceContract } from '#contracts/caterory_service_contract'
 import { inject } from '@adonisjs/core'
+import Category from '#models/category'
+import { CategoryInterface } from '#interfaces/category.interface'
 
 /**
  * Controller for handling category-related requests.
@@ -14,9 +16,9 @@ export default class CategoriesController {
    * @param {HttpContext} ctx - The HTTP context.
    * @returns {Promise<void>} - HTTP response with categories.
    */
-  public async index({ response }: HttpContext): Promise<void> {
+  public async index({ response }: HttpContext): Promise<void | Category[]> {
     const categories = await this.categoryService.getAllCategories()
-    return response.json(categories)
+    return response.ok(categories)
   }
 
   /**
@@ -24,8 +26,8 @@ export default class CategoriesController {
    * @param {HttpContext} ctx - The HTTP context, containing parameters.
    * @returns {Promise<void>} - HTTP response with the category or error message.
    */
-  public async show({ params, response }: HttpContext): Promise<void> {
+  public async show({ params, response }: HttpContext): Promise<void | CategoryInterface | null> {
     const category = await this.categoryService.findCategoryById(params.id)
-    return response.json(category)
+    return response.ok(category)
   }
 }

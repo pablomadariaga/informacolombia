@@ -14,7 +14,6 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
         .comment('Foreign key referencing categories table')
-      table.string('category').notNullable().comment('Category of the expense')
       table.date('date').notNullable().comment('Date of the expense')
       table.string('description', 255).nullable().comment('Optional description of the expense')
       table.timestamp('created_at')

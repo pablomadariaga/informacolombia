@@ -20,6 +20,7 @@
     "#mails/*": "./app/mails/*.js",
     "#services/*": "./app/services/*.js",
     "#contracts/*": "./contracts/*.js",
+    "#interfaces/*": "./interfaces/*.js",
     "#repositories/*": "./app/repositories/*.js",
     "#listeners/*": "./app/listeners/*.js",
     "#events/*": "./app/events/*.js",

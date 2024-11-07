@@ -1,6 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { ExpenseServiceContract } from '#contracts/expense_service_contract'
 import { inject } from '@adonisjs/core'
+import Expense from '#models/expense'
+import { ExpenseInterface } from '#interfaces/expense.interface'
 
 /**
  * Controller for handling expense-related requests.
@@ -12,23 +14,30 @@ export default class ExpensesController {
   /**
    * Retrieves all expenses.
    * @param {HttpContext} ctx - The HTTP context.
-   * @returns {Promise<void>} - HTTP response with expenses.
+   * @returns {Promise<void|any>} - HTTP response with expenses.
    */
-  public async index({ response }: HttpContext): Promise<void> {
+  public async index({ response }: HttpContext): Promise<void | ExpenseInterface[]> {
     const expenses = await this.expenseService.getAllExpenses()
-    return response.json(expenses)
+    return response.ok(
+      expenses.map((expense) => {
+        return expense.serialize() as ExpenseInterface
+      })
+    )
   }
 
   /**
    * Creates a new expense.
    * @param {HttpContext} ctx - The HTTP context, containing request data.
-   * @returns {Promise<void>} - HTTP response with the created expense or error message.
+   * @returns {Promise<void|any>} - HTTP response with the created expense or error message.
    */
-  public async store({ request, response }: HttpContext): Promise<void> {
+  public async store({
+    request,
+    response,
+  }: HttpContext): Promise<void | ExpenseInterface | { message: string }> {
     const data = request.only(['amount', 'categoryId', 'date', 'description'])
     try {
       const expense = await this.expenseService.createExpense(data)
-      return response.created(expense)
+      return response.created(expense.serialize() as ExpenseInterface)
     } catch (error) {
       return response.badRequest({ message: error.message })
     }
@@ -37,16 +46,20 @@ export default class ExpensesController {
   /**
    * Updates an existing expense.
    * @param {HttpContext} ctx - The HTTP context, containing request data and parameters.
-   * @returns {Promise<void>} - HTTP response with the updated expense or error message.
+   * @returns {Promise<void|any>} - HTTP response with the updated expense or error message.
    */
-  public async update({ request, params, response }: HttpContext): Promise<void> {
+  public async update({
+    request,
+    params,
+    response,
+  }: HttpContext): Promise<void | ExpenseInterface | { message: string }> {
     const data = request.only(['amount', 'categoryId', 'date', 'description'])
     try {
       const expense = await this.expenseService.updateExpense(params.id, data)
       if (expense) {
-        return response.json(expense)
+        return response.ok(expense.serialize() as ExpenseInterface)
       }
-      return response.notFound({ message: 'Expense not found' })
+      return response.notFound({ message: 'Expense not found or category no found' })
     } catch (error) {
       return response.badRequest({ message: error.message })
     }
@@ -55,9 +68,9 @@ export default class ExpensesController {
   /**
    * Deletes an expense by its ID.
    * @param {HttpContext} ctx - The HTTP context, containing parameters.
-   * @returns {Promise<void>} - HTTP response indicating success or failure.
+   * @returns {Promise<void|any>} - HTTP response indicating success or failure.
    */
-  public async destroy({ params, response }: HttpContext): Promise<void> {
+  public async destroy({ params, response }: HttpContext): Promise<void | { message: string }> {
     const success = await this.expenseService.deleteExpense(params.id)
     if (success) {
       return response.noContent()

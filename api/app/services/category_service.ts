@@ -25,10 +25,6 @@ export class CategoryService implements CategoryServiceContract {
    * @throws {Error} - If the category ID is invalid.
    */
   public async findCategoryById(id: number): Promise<Category | null> {
-    const category = await this.categoryRepository.findCategoryById(id)
-    if (!category) {
-      throw new Error('Invalid category ID')
-    }
-    return category
+    return await this.categoryRepository.findCategoryById(id)
   }
 }
