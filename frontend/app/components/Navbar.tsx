@@ -11,57 +11,61 @@ export function Navbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    setTheme(isDarkMode ? "dark" : "light");
-  }, [isDarkMode]);
+    if (typeof window !== "undefined") {
+      const preferredTheme = getPreferredTheme();
+      setIsDarkMode(preferredTheme === "dark");
+      setTheme(preferredTheme);
 
-  const getStoredTheme = () => localStorage.getItem("theme");
+      // Add listener for system color scheme changes
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = () => {
+        const storedTheme = getStoredTheme();
+        if (storedTheme !== "light" && storedTheme !== "dark") {
+          setTheme(getPreferredTheme());
+        }
+      };
+      mediaQuery.addEventListener("change", handleChange);
 
-  const setStoredTheme = (theme: string) =>
-    localStorage.setItem("theme", theme);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+  }, []);
+
+  const getStoredTheme = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme");
+    }
+    return null;
+  };
+
+  const setStoredTheme = (theme: string) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", theme);
+    }
+  };
 
   const getPreferredTheme = () => {
     const storedTheme = getStoredTheme();
     if (storedTheme) {
       return storedTheme;
     }
-
     return window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
   };
 
   const toggleMode = () => {
+    const newTheme = !isDarkMode ? "dark" : "light";
     setIsDarkMode(!isDarkMode);
-    setStoredTheme(!isDarkMode ? "dark" : "light");
-    setTheme(!isDarkMode ? "dark" : "light");
+    setStoredTheme(newTheme);
+    setTheme(newTheme);
   };
 
   const setTheme = (theme: string) => {
-    if (theme === "auto") {
-      document.documentElement.setAttribute(
-        "data-bs-theme",
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-      );
-    } else {
-      document.documentElement.setAttribute("data-bs-theme", theme);
-    }
+    document.documentElement.setAttribute("data-bs-theme", theme);
   };
 
-  setTheme(getPreferredTheme());
-
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      const storedTheme = getStoredTheme();
-      if (storedTheme !== "light" && storedTheme !== "dark") {
-        setTheme(getPreferredTheme());
-      }
-    });
-
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <Link href="/" className="navbar-brand">
           <h3>Expense Tracker</h3>

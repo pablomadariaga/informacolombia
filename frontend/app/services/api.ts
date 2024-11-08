@@ -1,15 +1,13 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import { Expense } from "../types/ExpenseInterface";
 import { Category } from "../types/CategoryInterface";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 /**
  * Fetches all expenses from the API.
  * @returns {Promise<Expense[]>} - A promise that resolves to an array of Expense objects.
  */
 export const getExpenses = async (): Promise<Expense[]> => {
-  const response = await axios.get(`${BASE_URL}/expenses`);
+  const response = await axiosInstance.get("/expenses");
   return response.data;
 };
 
@@ -19,7 +17,7 @@ export const getExpenses = async (): Promise<Expense[]> => {
  * @returns {Promise<Expense>} - A promise that resolves to the created Expense object.
  */
 export const createExpense = async (expense: Expense): Promise<Expense> => {
-  const response = await axios.post(`${BASE_URL}/expenses`, expense);
+  const response = await axiosInstance.post("/expenses", expense);
   return response.data;
 };
 
@@ -29,11 +27,8 @@ export const createExpense = async (expense: Expense): Promise<Expense> => {
  * @param {Expense} expense - The updated expense data.
  * @returns {Promise<Expense>} - A promise that resolves to the updated Expense object.
  */
-export const updateExpense = async (
-  id: number,
-  expense: Expense
-): Promise<Expense> => {
-  const response = await axios.put(`${BASE_URL}/expenses/${id}`, expense);
+export const updateExpense = async (id: number, expense: Expense): Promise<Expense> => {
+  const response = await axiosInstance.put(`/expenses/${id}`, expense);
   return response.data;
 };
 
@@ -43,7 +38,7 @@ export const updateExpense = async (
  * @returns {Promise<void>} - A promise that resolves when the deletion is complete.
  */
 export const deleteExpense = async (id: number): Promise<void> => {
-  await axios.delete(`${BASE_URL}/expenses/${id}`);
+  await axiosInstance.delete(`/expenses/${id}`);
 };
 
 /**
@@ -51,6 +46,6 @@ export const deleteExpense = async (id: number): Promise<void> => {
  * @returns {Promise<Category[]>} - A promise that resolves to an array of Category objects.
  */
 export const getCategories = async (): Promise<Category[]> => {
-  const response = await axios.get(`${BASE_URL}/categories`);
+  const response = await axiosInstance.get("/categories");
   return response.data;
 };
