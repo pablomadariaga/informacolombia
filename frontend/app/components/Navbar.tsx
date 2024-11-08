@@ -11,12 +11,54 @@ export function Navbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    document.body.className = isDarkMode ? "dark-mode" : "light-mode";
+    setTheme(isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
+
+  const getStoredTheme = () => localStorage.getItem("theme");
+
+  const setStoredTheme = (theme: string) =>
+    localStorage.setItem("theme", theme);
+
+  const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme();
+    if (storedTheme) {
+      return storedTheme;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
 
   const toggleMode = () => {
     setIsDarkMode(!isDarkMode);
+    setStoredTheme(!isDarkMode ? "dark" : "light");
+    setTheme(!isDarkMode ? "dark" : "light");
   };
+
+  const setTheme = (theme: string) => {
+    if (theme === "auto") {
+      document.documentElement.setAttribute(
+        "data-bs-theme",
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+      );
+    } else {
+      document.documentElement.setAttribute("data-bs-theme", theme);
+    }
+  };
+
+  setTheme(getPreferredTheme());
+
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      const storedTheme = getStoredTheme();
+      if (storedTheme !== "light" && storedTheme !== "dark") {
+        setTheme(getPreferredTheme());
+      }
+    });
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -32,7 +74,7 @@ export function Navbar() {
             className="btn btn-outline-secondary btn-sm ms-2"
             onClick={toggleMode}
           >
-            {isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            {isDarkMode ? "Light Mode" : "Dark Mode"}
           </button>
         </div>
       </div>
