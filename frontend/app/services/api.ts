@@ -2,12 +2,11 @@ import axios from "axios";
 import { Expense } from "../types/ExpenseInterface";
 import { Category } from "../types/CategoryInterface";
 
-// API base URL from environment variables
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 /**
- * Fetch all expenses from the API.
- * @returns {Promise<Expense[]>} Array of Expense objects.
+ * Fetches all expenses from the API.
+ * @returns {Promise<Expense[]>} - A promise that resolves to an array of Expense objects.
  */
 export const getExpenses = async (): Promise<Expense[]> => {
   const response = await axios.get(`${BASE_URL}/expenses`);
@@ -15,9 +14,9 @@ export const getExpenses = async (): Promise<Expense[]> => {
 };
 
 /**
- * Create a new expense in the API.
- * @param {Expense} expense - Expense object to be created.
- * @returns {Promise<Expense>} The created Expense object.
+ * Creates a new expense in the API.
+ * @param {Expense} expense - The expense data to create.
+ * @returns {Promise<Expense>} - A promise that resolves to the created Expense object.
  */
 export const createExpense = async (expense: Expense): Promise<Expense> => {
   const response = await axios.post(`${BASE_URL}/expenses`, expense);
@@ -25,10 +24,10 @@ export const createExpense = async (expense: Expense): Promise<Expense> => {
 };
 
 /**
- * Update an existing expense by ID.
- * @param {number} id - ID of the expense to be updated.
- * @param {Expense} expense - Expense object with updated data.
- * @returns {Promise<Expense>} The updated Expense object.
+ * Updates an existing expense in the API.
+ * @param {number} id - The ID of the expense to update.
+ * @param {Expense} expense - The updated expense data.
+ * @returns {Promise<Expense>} - A promise that resolves to the updated Expense object.
  */
 export const updateExpense = async (
   id: number,
@@ -39,17 +38,17 @@ export const updateExpense = async (
 };
 
 /**
- * Delete an expense by ID.
- * @param {number} id - ID of the expense to be deleted.
- * @returns {Promise<void>} Resolves when deletion is complete.
+ * Deletes an expense from the API.
+ * @param {number} id - The ID of the expense to delete.
+ * @returns {Promise<void>} - A promise that resolves when the deletion is complete.
  */
 export const deleteExpense = async (id: number): Promise<void> => {
   await axios.delete(`${BASE_URL}/expenses/${id}`);
 };
 
 /**
- * Fetch all categories from the API.
- * @returns {Promise<Category[]>} Array of Category objects.
+ * Fetches all categories from the API.
+ * @returns {Promise<Category[]>} - A promise that resolves to an array of Category objects.
  */
 export const getCategories = async (): Promise<Category[]> => {
   const response = await axios.get(`${BASE_URL}/categories`);

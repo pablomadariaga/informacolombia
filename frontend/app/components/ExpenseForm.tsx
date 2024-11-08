@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Expense } from "../types/ExpenseInterface";
+import { Category } from "../types/CategoryInterface";
+import { getCategories } from "../services/api";
 
 interface ExpenseFormProps {
   onSubmit: (expense: Expense) => void;
   initialValues?: Expense;
-  loading: boolean; // New loading prop to indicate loading status
+  loading: boolean;
 }
 
 /**
- * ExpenseForm component for adding or editing an expense.
- * @param {ExpenseFormProps} props - Contains onSubmit callback, initialValues, and loading state.
- * @returns JSX Element for ExpenseForm.
+ * ExpenseForm component for creating or editing an expense.
+ * @param {ExpenseFormProps} props - Contains onSubmit callback, initialValues for form inputs, and loading status.
+ * @returns JSX.Element - A JSX element representing the expense form.
  */
 export function ExpenseForm({
   onSubmit,
@@ -25,9 +27,18 @@ export function ExpenseForm({
   const [description, setDescription] = useState(
     initialValues?.description || ""
   );
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const data = await getCategories();
+      setCategories(data);
+    };
+    fetchCategories();
+  }, []);
 
   /**
-   * Handles form submission, calling onSubmit with the expense data.
+   * Handles form submission by passing expense data to the onSubmit callback.
    * @param {React.FormEvent} e - Form submission event.
    */
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,21 +58,26 @@ export function ExpenseForm({
           id="amount"
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
-          disabled={loading} // Disable input during loading
+          disabled={loading}
         />
       </div>
       <div className="mb-3">
         <label htmlFor="categoryId" className="form-label">
-          Category ID
+          Category
         </label>
-        <input
-          type="number"
+        <select
           className="form-control"
           id="categoryId"
           value={categoryId}
           onChange={(e) => setCategoryId(Number(e.target.value))}
-          disabled={loading} // Disable input during loading
-        />
+          disabled={loading}
+        >
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="mb-3">
         <label htmlFor="date" className="form-label">
@@ -73,20 +89,20 @@ export function ExpenseForm({
           id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          disabled={loading} // Disable input during loading
+          disabled={loading}
         />
       </div>
       <div className="mb-3">
         <label htmlFor="description" className="form-label">
           Description
         </label>
-        <input
-          type="text"
+        <textarea
           className="form-control"
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          disabled={loading} // Disable input during loading
+          disabled={loading}
+          rows={3}
         />
       </div>
       <button type="submit" className="btn btn-primary" disabled={loading}>
