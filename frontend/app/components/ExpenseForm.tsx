@@ -5,6 +5,7 @@ import { Expense } from "../types/ExpenseInterface";
 import { Category } from "../types/CategoryInterface";
 import { getCategories } from "../services/api";
 import { useToast } from "../context/ToastContext";
+import { useLoading } from "../context/LoadingContext";
 
 interface ExpenseFormProps {
   onSubmit: (expense: Expense) => Promise<void>;
@@ -24,27 +25,30 @@ export function ExpenseForm({
   loading,
 }: ExpenseFormProps) {
   const { showToast } = useToast(); // Access toast function from context
-  const [amount, setAmount] = useState(initialValues?.amount || 0);
-  const [categoryId, setCategoryId] = useState(initialValues?.categoryId || 1);
-  const [date, setDate] = useState(initialValues?.date || "");
+  const { setLoading } = useLoading(); // Access loading function from context
+  const [amount, setAmount] = useState(initialValues?.amount ?? 0);
+  const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? 1);
+  const [date, setDate] = useState(initialValues?.date ?? "");
   const [description, setDescription] = useState(
-    initialValues?.description || ""
+    initialValues?.description ?? ""
   );
   const [categories, setCategories] = useState<Category[]>([]);
   const [errors, setErrors] = useState<{ amount?: string; date?: string }>({});
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoading(true); // Start loading
       await getCategories()
         .then((data) => {
           setCategories(data);
         })
         .catch(() => {
           showToast("Error fetching categories", "danger");
-        });
+        })
+        .finally(() => setLoading(false)); // Stop loading;
     };
     fetchCategories();
-  }, [showToast]);
+  }, [showToast, setLoading]);
 
   /**
    * Validates the form fields in real-time and sets error messages.
@@ -68,6 +72,7 @@ export function ExpenseForm({
     e.preventDefault();
     if (!validateForm()) return;
 
+    setLoading(true); // Start loading
     await onSubmit({ amount, categoryId, date, description })
       .then(() => {
         showToast("Expense created successfully", "success");
@@ -83,7 +88,8 @@ export function ExpenseForm({
         } else {
           showToast("An unexpected error occurred", "danger");
         }
-      });
+      })
+      .finally(() => setLoading(false)); // Stop loading;
   };
 
   return (

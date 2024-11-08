@@ -1,25 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getExpenses } from "./services/api";
-import { Expense } from "./types/ExpenseInterface";
+import { useState } from "react";
 import Link from "next/link";
+import { Expense } from "./types/ExpenseInterface";
+import { ExpensesList } from "./components/ExpensesList";
 
 /**
  * HomePage component displaying a table of expenses.
- * Fetches and displays expenses as a table, with options for each expense.
+ * Renders the ExpensesList component and provides a link to add new expenses.
  * @returns JSX.Element - A JSX element representing the main page with an expenses table.
  */
 export default function HomePage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
-
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      const data = await getExpenses();
-      setExpenses(data);
-    };
-    fetchExpenses();
-  }, []);
 
   return (
     <div>
@@ -31,27 +23,8 @@ export default function HomePage() {
           </button>
         </Link>
       </div>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Category</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {expenses.map((expense) => (
-            <tr key={expense.id}>
-              <td>{expense.date}</td>
-              <td>${expense.amount}</td>
-              <td>{expense.categoryId}</td>{" "}
-              {/* Replace with category name if available */}
-              <td>{expense.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Render the ExpensesList component */}
+      <ExpensesList expenses={expenses} setExpenses={setExpenses} />
     </div>
   );
 }
