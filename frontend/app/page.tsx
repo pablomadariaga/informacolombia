@@ -23,10 +23,14 @@ export default function HomePage() {
 
   return (
     <div className="container my-4">
-      <h1>Expenses</h1>
-      <Link href="/expenses/create">
-        <button className="btn btn-primary mb-3">Add New Expense</button>
-      </Link>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1>Expenses</h1>
+        <Link href="/expenses/create">
+          <button className="btn btn-primary mb-3 btn-sm">
+            Add New Expense
+          </button>
+        </Link>
+      </div>
       <table className="table table-striped">
         <thead>
           <tr>
