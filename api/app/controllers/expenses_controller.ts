@@ -1,8 +1,7 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { ExpenseServiceContract } from '#contracts/expense_service_contract'
-import { inject } from '@adonisjs/core'
-import Expense from '#models/expense'
 import { ExpenseInterface } from '#interfaces/expense.interface'
+import { inject } from '@adonisjs/core'
+import type { HttpContext } from '@adonisjs/core/http'
 
 /**
  * Controller for handling expense-related requests.

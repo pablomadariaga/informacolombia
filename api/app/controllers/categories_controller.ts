@@ -1,8 +1,7 @@
-import type { HttpContext } from '@adonisjs/core/http'
 import { CategoryServiceContract } from '#contracts/caterory_service_contract'
-import { inject } from '@adonisjs/core'
-import Category from '#models/category'
 import { CategoryInterface } from '#interfaces/category.interface'
+import { inject } from '@adonisjs/core'
+import type { HttpContext } from '@adonisjs/core/http'
 
 /**
  * Controller for handling category-related requests.
@@ -16,9 +15,13 @@ export default class CategoriesController {
    * @param {HttpContext} ctx - The HTTP context.
    * @returns {Promise<void>} - HTTP response with categories.
    */
-  public async index({ response }: HttpContext): Promise<void | Category[]> {
+  public async index({ response }: HttpContext): Promise<void | CategoryInterface[]> {
     const categories = await this.categoryService.getAllCategories()
-    return response.ok(categories)
+    return response.ok(
+      categories.map((category) => {
+        return category.serialize() as CategoryInterface
+      })
+    )
   }
 
   /**
@@ -28,6 +31,9 @@ export default class CategoriesController {
    */
   public async show({ params, response }: HttpContext): Promise<void | CategoryInterface | null> {
     const category = await this.categoryService.findCategoryById(params.id)
-    return response.ok(category)
+    if (category) {
+      return response.ok(category.serialize() as CategoryInterface)
+    }
+    return response.notFound({ message: 'category no found' })
   }
 }
