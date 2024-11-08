@@ -1,7 +1,4 @@
-Claro, aquí tienes el contenido completo del archivo `README.md` encerrado entre comillas simples para que puedas copiarlo sin problemas de formato:
-
-```markdown
-'# Frontend - Seguimiento de Gastos Personales
+# Frontend - Seguimiento de Gastos Personales
 
 Este proyecto es la interfaz de usuario del sistema de seguimiento de gastos personales, desarrollado como una prueba técnica para **Informa Colombia S.A.S**. La aplicación permite a los usuarios agregar, ver y gestionar gastos personales mediante una interfaz intuitiva y conectada a la API.
 
