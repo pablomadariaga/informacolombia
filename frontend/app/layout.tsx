@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Navbar } from "./components/Navbar";
 import { ToastProvider } from "./context/ToastContext";
+import { LoadingProvider } from "./context/LoadingContext";
+import { LoadingBar } from "./components/LoadingBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,10 +45,13 @@ export default function RootLayout({ children }: Readonly<LayoutProps>) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ToastProvider>
-          <Navbar />
-          <main className="container my-4">{children}</main>
-        </ToastProvider>
+        <LoadingProvider>
+          <ToastProvider> 
+            <LoadingBar /> {/* Loading bar at the top of the page */}
+            <Navbar />
+            <main className="container my-4">{children}</main>
+          </ToastProvider>
+        </LoadingProvider>
       </body>
     </html>
   );
