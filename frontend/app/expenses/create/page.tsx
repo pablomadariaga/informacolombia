@@ -5,6 +5,7 @@ import { ExpenseForm } from "../../components/ExpenseForm";
 import { createExpense } from "../../services/api";
 import { useRouter } from "next/navigation";
 import { Expense } from "@/app/types/ExpenseInterface";
+import Link from "next/link";
 
 /**
  * CreateExpensePage component for adding a new expense.
@@ -33,8 +34,15 @@ export default function CreateExpensePage() {
   };
 
   return (
-    <div className="container my-4">
-      <h1>Create Expense</h1>
+    <div>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h4>Expenses</h4>
+        <Link href="/">
+          <button className="btn btn-primary mb-3 btn-sm">
+            Add New Expense
+          </button>
+        </Link>
+      </div>
       <ExpenseForm onSubmit={handleAddExpense} loading={loading} />
     </div>
   );
