@@ -19,7 +19,9 @@ export class ExpenseRepository implements ExpenseRepositoryContract {
    * @returns {Promise<Expense>} - The created expense.
    */
   public async createExpense(data: Partial<Expense>): Promise<Expense> {
-    return await Expense.create(data)
+    const expense = await Expense.create(data)
+    await expense.load('category')
+    return expense
   }
 
   /**
@@ -33,6 +35,7 @@ export class ExpenseRepository implements ExpenseRepositoryContract {
     if (expense) {
       expense.merge(data)
       await expense.save()
+      await expense.load('category')
       return expense
     }
     return null
