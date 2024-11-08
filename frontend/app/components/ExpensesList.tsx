@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { deleteExpense, getExpenses } from "../services/api";
 import { Expense } from "../types/ExpenseInterface";
 import { useToast } from "../context/ToastContext";
@@ -19,21 +19,34 @@ interface ExpensesListProps {
 export function ExpensesList({ expenses, setExpenses }: ExpensesListProps) {
   const { showToast } = useToast(); // Access toast function from context
   const { setLoading } = useLoading(); // Access loading function from context
+  const [hasError, setHasError] = useState(false); // Track if there was an error
 
   useEffect(() => {
     const fetchExpenses = async () => {
       setLoading(true); // Start loading
+
       await getExpenses()
         .then((data) => {
           setExpenses(data);
+          setHasError(false); // Reset error state if successful
         })
         .catch(() => {
-          showToast("Error fetching expenses", "danger");
+          if (!hasError) {
+            showToast(
+              "Error loading expenses. Please try again later.",
+              "danger"
+            );
+            setHasError(true); // Set error state to avoid repeated toasts
+          }
         })
         .finally(() => setLoading(false)); // Stop loading
     };
-    fetchExpenses();
-  }, [setExpenses, setLoading, showToast]);
+
+    if (!hasError) {
+      // Only attempt to fetch if there's no error
+      fetchExpenses();
+    }
+  }, [setExpenses, setLoading, showToast, hasError]);
 
   /**
    * Deletes an expense by ID and updates the list.

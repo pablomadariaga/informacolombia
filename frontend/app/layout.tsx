@@ -40,8 +40,7 @@ export default function RootLayout({ children }: Readonly<LayoutProps>) {
         <meta
           name="description"
           content="A simple expense tracker application"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        />        
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

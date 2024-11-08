@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ToastContextProps {
@@ -21,6 +22,7 @@ export const useToast = () => {
 
 /**
  * ToastProvider component that provides toast notifications to children components.
+ * Positions the toast in the bottom-right corner of the screen.
  * @param {ReactNode} children - The child components that will have access to the toast functionality.
  * @returns JSX.Element - The provider component with a toast notification.
  */
@@ -36,22 +38,27 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const showToast = (message: string, type: "success" | "danger") => {
     setToastMessage(message);
     setToastType(type);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 5000);
   };
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
       {toastMessage && (
-        <div className={`toast align-items-center text-bg-${toastType} border-0 show mt-3`} role="alert">
-          <div className="d-flex">
-            <div className="toast-body">{toastMessage}</div>
-            <button
-              type="button"
-              className="btn-close btn-close-white me-2 m-auto"
-              aria-label="Close"
-              onClick={() => setToastMessage(null)}
-            ></button>
+        <div className="toast-container position-fixed bottom-0 end-0 p-3">
+          <div
+            className={`toast align-items-center text-bg-${toastType} border-0 show`}
+            role="alert"
+          >
+            <div className="d-flex">
+              <div className="toast-body">{toastMessage}</div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                aria-label="Close"
+                onClick={() => setToastMessage(null)}
+              ></button>
+            </div>
           </div>
         </div>
       )}

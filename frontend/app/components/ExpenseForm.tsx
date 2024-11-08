@@ -24,8 +24,8 @@ export function ExpenseForm({
   initialValues,
   loading,
 }: ExpenseFormProps) {
-  const { showToast } = useToast(); // Access toast function from context
-  const { setLoading } = useLoading(); // Access loading function from context
+  const { showToast } = useToast();
+  const { setLoading } = useLoading();
   const [amount, setAmount] = useState(initialValues?.amount ?? 0);
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? 1);
   const [date, setDate] = useState(initialValues?.date ?? "");
@@ -33,22 +33,23 @@ export function ExpenseForm({
     initialValues?.description ?? ""
   );
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false); // New state to track API load status
   const [errors, setErrors] = useState<{ amount?: string; date?: string }>({});
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    if (!categoriesLoaded) {
       setLoading(true); // Start loading
-      await getCategories()
+      getCategories()
         .then((data) => {
           setCategories(data);
+          setCategoriesLoaded(true); // Mark as loaded
         })
         .catch(() => {
           showToast("Error fetching categories", "danger");
         })
-        .finally(() => setLoading(false)); // Stop loading;
-    };
-    fetchCategories();
-  }, [showToast, setLoading]);
+        .finally(() => setLoading(false)); // Stop loading
+    }
+  }, [categoriesLoaded, setLoading, showToast]);
 
   /**
    * Validates the form fields in real-time and sets error messages.
@@ -89,7 +90,7 @@ export function ExpenseForm({
           showToast("An unexpected error occurred", "danger");
         }
       })
-      .finally(() => setLoading(false)); // Stop loading;
+      .finally(() => setLoading(false)); // Stop loading
   };
 
   return (
