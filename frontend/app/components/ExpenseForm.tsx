@@ -126,7 +126,7 @@ export function ExpenseForm({
             Category
           </label>
           <select
-            className="form-control"
+            className="form-select"
             id="categoryId"
             value={categoryId}
             onChange={(e) => setCategoryId(Number(e.target.value))}
