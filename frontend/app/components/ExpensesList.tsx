@@ -28,6 +28,9 @@ export function ExpensesList({ expenses, setExpenses }: ExpensesListProps) {
       await getExpenses()
         .then((data) => {
           setExpenses(data);
+          if (!data.length) {
+            showToast("No expense record found", "info");
+          }
           setHasError(false); // Reset error state if successful
         })
         .catch(() => {

@@ -21,6 +21,8 @@ export function LoadingBar() {
       return () => clearInterval(interval);
     } else {
       setTimeout(() => setWidth(100), 200); // Finish the bar quickly when loading stops
+
+      setTimeout(() => setWidth(0), 500);
     }
   }, [loading]);
 

@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface ToastContextProps {
-  showToast: (message: string, type: "success" | "danger") => void;
+  showToast: (message: string, type: "success" | "danger" | "info") => void;
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -28,14 +28,16 @@ export const useToast = () => {
  */
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<"success" | "danger">("success");
+  const [toastType, setToastType] = useState<"success" | "danger" | "info">(
+    "success"
+  );
 
   /**
    * Displays a toast notification with a specific message and type.
    * @param {string} message - The message to display in the toast.
-   * @param {"success" | "danger"} type - The type of toast (either success or danger).
+   * @param {"success" | "danger" | "info"} type - The type of toast (either success or danger).
    */
-  const showToast = (message: string, type: "success" | "danger") => {
+  const showToast = (message: string, type: "success" | "danger" | "info") => {
     setToastMessage(message);
     setToastType(type);
     setTimeout(() => setToastMessage(null), 5000);
