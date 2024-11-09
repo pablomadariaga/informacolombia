@@ -45,7 +45,11 @@ export function ExpenseForm({
           setCategoriesLoaded(true); // Mark as loaded
         })
         .catch(() => {
-          showToast("Error fetching categories", "danger");
+          showToast(
+            "Error fetching categories. Please try again later.",
+            "danger"
+          );
+          setCategoriesLoaded(true); // Mark as loaded
         })
         .finally(() => setLoading(false)); // Stop loading
     }

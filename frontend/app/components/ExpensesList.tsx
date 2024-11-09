@@ -30,8 +30,10 @@ export function ExpensesList({ expenses, setExpenses }: ExpensesListProps) {
           setExpenses(data);
           if (!data.length) {
             showToast("No expense record found", "info");
+            setHasError(true); // Set error state to avoid repeated toasts
+          } else {
+            setHasError(false); // Reset error state if successful
           }
-          setHasError(false); // Reset error state if successful
         })
         .catch(() => {
           if (!hasError) {
